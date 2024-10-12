@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Topology - Text Editor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    #editor {
+      flex-grow: 1;
+      padding: 20px;
+      border: none;
+      resize: none;
+      width: 100%;
+      font-size: 16px;
+      line-height: 1.6;
+      background-color: #f4f4f4;
+      color: #333;
+      overflow-y: scroll;
+    }
+
+    #toolbar {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    #toolbar button {
+      background-color: #555;
+      border: none;
+      color: white;
+      padding: 10px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    #toolbar button:hover {
+      background-color: #777;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="toolbar">
+    <div>
+      <button id="saveFile">Save</button>
+      <button id="loadFile">Load</button>
+    </div>
+    <p>My Node ID: <span id="peerId"></span></p>
+    <p>Session <span id="chatId"></span></p>
+    <p>Text Editor</p>
+  </div>
+
+  <textarea id="editor" placeholder="Digite aqui..." data-hashes=""></textarea>
+
+
+  <script>
+    const editor = document.getElementById("editor");
+    counter: int = 0;
+
+    editor.addEventListener("input", function () {
+      const content = editor.value;
+      let hashes = [];
+
+      for (let i = 0; i < content.length; i++) {
+        const char = content[i];
+        const hash = simpleHash(char);
+        hashes.push(`${char}:${hash}`);
+      }
+
+      // Armazena os hashes no atributo data-hashes
+      editor.setAttribute('data-hashes', hashes.join(','));
+    });
+
+    editor.addEventListener("keydown", function (event) {
+      const key = event.key;
+
+      if (key.length === 1) {
+        counter++;
+        hashes.push
+      } else if (key === "Backspace") {
+        console.log("Backspace pressed");
+      } else if (key === "Delete") {
+        console.log("Delete pressed");
+      }
+
+      // Log the character typed (except special keys like Shift, Control, etc.)
+      console.log("-----------------")
+      console.log("Key pressed:", key);
+    });
+
+    // Save file to local storage
+    document.getElementById("saveFile").addEventListener("click", function () {
+      const content = editor.value;
+      const blob = new Blob([content], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "document.txt";
+      link.click();
+    });
+
+    // Load a file
+    document.getElementById("loadFile").addEventListener("click", function () {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".txt";
+      input.onchange = function (e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          editor.value = event.target.result;
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    });
+
+    // Allow saving on Ctrl+S
+    document.addEventListener("keydown", function (e) {
+      if (e.ctrlKey && e.key === "s") {
+        e.preventDefault();
+        document.getElementById("saveFile").click();
+      }
+    });
+  </script>
+</body>
+
+</html>
