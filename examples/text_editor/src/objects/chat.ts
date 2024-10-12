@@ -8,6 +8,7 @@ import {
 } from "@topology-foundation/object";
 
 import { createHash, Hash } from 'crypto';
+import { openAsBlob } from "fs";
 
 interface Letter {
 	readonly char: string;
@@ -17,11 +18,14 @@ interface Letter {
 
 export class Document implements CRO {
     readonly end: Letter;
-	operations: string[] = ["STACK DAS OPERAÇÕES"]; // backtrack das operações ?
+	operations: string[] = ["addLetter", "RemoveLetter"]; // backtrack das operações ?
     document: Letter[];
     add_operations: Letter[];
-    remove_operations: Set<Hash>;
+    remove_operations: Set<Letter>;
     semanticsType: SemanticsType = SemanticsType.pair;
+
+	// duvidas 
+		// preciso de 2 funções de deleção ? uma local e outra pra mergear as alterações da network ?
 
     constructor() {
         this.end = {
@@ -32,20 +36,40 @@ export class Document implements CRO {
 
         this.document = [this.end];
         this.add_operations = [];
-        this.remove_operations = new Set<Hash>();
+        this.remove_operations = new Set<Letter>();
     }
 
-	addLetter(new_letter: Letter) {
+	addLetter(new_letter: Letter, tail: Letter) {
 		this.add_operations.push(new_letter);
+	}
+
+	RemoveLetters() { // chama no merge
+		for (const want_to_remove_letter of this.remove_operations) {
+			this.document = this.document.filter(document_letter => 
+				document_letter.hash !== want_to_remove_letter.hash
+			);
+		}
+
+		this.remove_operations.clear(); // tem como eu apagar sem querer um cara que ta chegando ?
+										// acredito que nao tenha como receber novas operações da rede ao mesmo tempo que opera localmente
 	}
 
 	resolveConflicts(vertices: Vertex[]): ResolveConflictsType {
 		return { action: ActionType.Nop };
 	}
 
-	mergeCallback(operations: Operation[]): void {
+	mergeCallback(operations: Operation[]): void { //  aqui implementa o a logica 
 		for (const op of operations) {
-			continue;
+			if (!op.value) continue;
+			switch(op.type) {
+				case "mergeRemoveLetters": {
+
+				}
+
+				case "mergeAddLetter": {
+					
+				}
+			}
 		}
 	}
 	
