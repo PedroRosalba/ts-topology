@@ -64,41 +64,41 @@
 
   <textarea id="editor" placeholder="Digite aqui..." data-hashes=""></textarea>
 
-
   <script>
     const editor = document.getElementById("editor");
-    counter: int = 0;
 
-    editor.addEventListener("input", function () {
-      const content = editor.value;
-      let hashes = [];
+    // counter: int = 0;
 
-      for (let i = 0; i < content.length; i++) {
-        const char = content[i];
-        const hash = simpleHash(char);
-        hashes.push(`${char}:${hash}`);
-      }
+    // editor.addEventListener("input", function () {
+    //   const content = editor.value;
+    //   let hashes = [];
 
-      // Armazena os hashes no atributo data-hashes
-      editor.setAttribute('data-hashes', hashes.join(','));
-    });
+    //   for (let i = 0; i < content.length; i++) {
+    //     const char = content[i];
+    //     const hash = simpleHash(char);
+    //     hashes.push(`${char}:${hash}`);
+    //   }
 
-    editor.addEventListener("keydown", function (event) {
-      const key = event.key;
+    //   // Armazena os hashes no atributo data-hashes
+    //   editor.setAttribute('data-hashes', hashes.join(','));
+    // });
 
-      if (key.length === 1) {
-        counter++;
-        hashes.push
-      } else if (key === "Backspace") {
-        console.log("Backspace pressed");
-      } else if (key === "Delete") {
-        console.log("Delete pressed");
-      }
+    // editor.addEventListener("keydown", function (event) {
+    //   const key = event.key;
 
-      // Log the character typed (except special keys like Shift, Control, etc.)
-      console.log("-----------------")
-      console.log("Key pressed:", key);
-    });
+    //   if (key.length === 1) {
+    //     counter++;
+    //     editor.setAttribute('data-hashes', )
+    //   } else if (key === "Backspace") {
+    //     console.log("Backspace pressed");
+    //   } else if (key === "Delete") {
+    //     console.log("Delete pressed");
+    //   }
+
+    //   // Log the character typed (except special keys like Shift, Control, etc.)
+    //   console.log("-----------------")
+    //   console.log("Key pressed:", key);
+    // });
 
     // Save file to local storage
     document.getElementById("saveFile").addEventListener("click", function () {
