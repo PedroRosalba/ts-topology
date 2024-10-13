@@ -14,9 +14,11 @@ interface Letter {
 	readonly char: string;
 	readonly hash: Hash;
 	readonly timestamp: Date;
+	insertion: Letter[];
 }
 
-export class Document implements CRO {
+export class TextEditor implements CRO {
+
     readonly end: Letter;
 	operations: string[] = ["addLetter", "RemoveLetter"]; // backtrack das operações ?
     document: Letter[];
@@ -32,6 +34,7 @@ export class Document implements CRO {
             char: "\0",
             hash: createHash("0"),
             timestamp: new Date(),
+			insertion: [],
         };
 
         this.document = [this.end];
@@ -41,6 +44,7 @@ export class Document implements CRO {
 
 	addLetter(new_letter: Letter, tail: Letter) {
 		this.add_operations.push(new_letter);
+		tail.insertion.push(new_letter);
 	}
 
 	RemoveLetters() { // chama no merge
@@ -52,6 +56,10 @@ export class Document implements CRO {
 
 		this.remove_operations.clear(); // tem como eu apagar sem querer um cara que ta chegando ?
 										// acredito que nao tenha como receber novas operações da rede ao mesmo tempo que opera localmente
+	}
+
+	getText(): Letter[]{
+		return this.document;
 	}
 
 	resolveConflicts(vertices: Vertex[]): ResolveConflictsType {

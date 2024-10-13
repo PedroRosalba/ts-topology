@@ -1,11 +1,16 @@
 import { TopologyNode } from "@topology-foundation/node";
 import type { TopologyObject } from "@topology-foundation/object";
-import { Chat } from "./objects/chat";
+import { Chat } from "./objects/text-editor";
+import { TextEditor } from "./objects/text-editor";
+import { text } from "stream/consumers";
+import { Letter } from "./objects/text-editor";
+import { createHash, Hash } from 'crypto';
+
 
 const node = new TopologyNode();
 // CRO = Conflict-free Replicated Object
 let topologyObject: TopologyObject;
-let chatCRO: Chat;
+let textEditorCRO: TextEditor;
 let peers: string[] = [];
 let discoveryPeers: string[] = [];
 let objectPeers: string[] = [];
@@ -30,35 +35,38 @@ const render = () => {
 	);
 	element_objectPeers.innerHTML = `[${objectPeers.join(", ")}]`;
 
-	if (!chatCRO) return;
-	const chat = chatCRO.getMessages();
+	if (!textEditorCRO) return;
+	const textEditor = textEditorCRO.getText();
+
 	const element_chat = <HTMLDivElement>document.getElementById("chat");
+
 	element_chat.innerHTML = "";
 
-	if (chat.size === 0) {
+	if (textEditor.length === 0) {
 		const div = document.createElement("div");
 		div.innerHTML = "No messages yet";
 		div.style.padding = "10px";
 		element_chat.appendChild(div);
 		return;
 	}
-	for (const message of [...chat].sort()) {
+	for (const letter of [...textEditor].sort()) {
 		const div = document.createElement("div");
-		div.innerHTML = message;
+		div.innerHTML = letter.char;
 		div.style.padding = "10px";
 		element_chat.appendChild(div);
 	}
 };
 
-async function sendMessage(message: string) {
+async function writeLetter(letter: Letter, tail: Letter) {
 	const timestamp: string = Date.now().toString();
-	if (!chatCRO) {
-		console.error("Chat CRO not initialized");
+	
+	if (!textEditorCRO) {
+		console.error("Text Editor CRO not initialized");
 		alert("Please create or join a chat room first");
 		return;
 	}
 
-	chatCRO.addMessage(timestamp, message, node.networkNode.peerId);
+	textEditorCRO.addLetter(letter, tail, timestamp);
 	render();
 }
 
@@ -87,11 +95,12 @@ async function main() {
 	});
 
 	const button_create = <HTMLButtonElement>(
-		document.getElementById("createRoom")
+		document.getElementById("create document")
 	);
+
 	button_create.addEventListener("click", async () => {
-		topologyObject = await node.createObject(new Chat());
-		chatCRO = topologyObject.cro as Chat;
+		topologyObject = await node.createObject(new TextEditor());
+		textEditorCRO = topologyObject.cro as TextEditor;
 		createConnectHandlers();
 		render();
 	});
@@ -108,32 +117,65 @@ async function main() {
 		}
 
 		topologyObject = await node.createObject(
-			new Chat(),
+			new TextEditor(),
 			objectId,
 			undefined,
 			true,
 		);
-		chatCRO = topologyObject.cro as Chat;
+		textEditorCRO = topologyObject.cro as TextEditor;
 		createConnectHandlers();
 		render();
 	});
 
-	const button_send = <HTMLButtonElement>document.getElementById("sendMessage");
-	button_send.addEventListener("click", async () => {
-		const input: HTMLInputElement = <HTMLInputElement>(
-			document.getElementById("messageInput")
-		);
-		const message: string = input.value;
-		input.value = "";
-		if (!message) {
-			console.error("Tried sending an empty message");
-			alert("Please enter a message");
-			return;
-		}
-		await sendMessage(message);
-		const element_chat = <HTMLDivElement>document.getElementById("chat");
-		element_chat.scrollTop = element_chat.scrollHeight;
+	// const button_send = <HTMLButtonElement>document.getElementById("writeText");
+	// button_send.addEventListener("click", async () => {
+	// 	const input: HTMLInputElement = <HTMLInputElement>(
+	// 		document.getElementById("messageInput")
+	// 	);
+	// 	const message: string = input.value;
+	// 	input.value = "";
+	// 	if (!message) {
+	// 		console.error("Tried sending an empty message");
+	// 		alert("Please enter a message");
+	// 		return;
+	// 	}
+	// 	await sendMessage(message);
+	// 	const element_chat = <HTMLDivElement>document.getElementById("chat");
+	// 	element_chat.scrollTop = element_chat.scrollHeight;
+	// });
+
+	//REVISAR ESSA PARTE
+	
+	const editor = <HTMLTextAreaElement>document.getElementById("editor"); // Cast to HTMLTextAreaElement
+	let typingTimer: NodeJS.Timeout; // Timer identifier
+	
+	editor.addEventListener("input", () => {
+		const timestamp = Date.now().toString();
+		clearTimeout(typingTimer); // Clear the timer on each keystroke
+		const message: string = editor.value.trim(); // Get the current value of the textarea
+		const letter = {
+			char: message,
+			hash: createHash("0"),
+			timestamp: timestamp, 
+			insertion: [],
+		};
+		const tail = {
+			char: message, //consertar essa porra aqui futuramente
+			hash: createHash("0"),
+			timestamp: timestamp,
+			insertion: [],
+		};
+		// Set a timer to send the message after a short delay (e.g., 1 second)
+		typingTimer = setTimeout(async () => {
+			if (message) {
+				await writeLetter(letter,tail);
+				const element_chat = <HTMLDivElement>document.getElementById("chat"); // Get the chat element
+				element_chat.scrollTop = element_chat.scrollHeight; // Scroll to the bottom
+			}
+		}, 1000); // Adjust the delay as needed
 	});
+	
+	
 }
 
 main();
