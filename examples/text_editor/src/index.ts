@@ -145,7 +145,7 @@ async function main() {
 	// });
 
 	//REVISAR ESSA PARTE
-	
+
 	const editor = <HTMLTextAreaElement>document.getElementById("editor"); // Cast to HTMLTextAreaElement
 	let typingTimer: NodeJS.Timeout; // Timer identifier
 	
@@ -173,6 +173,7 @@ async function main() {
 				element_chat.scrollTop = element_chat.scrollHeight; // Scroll to the bottom
 			}
 		}, 1000); // Adjust the delay as needed
+		render();
 	});
 	
 	
