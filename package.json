@@ -52,5 +52,8 @@
 		"github": {
 			"release": true
 		}
+	},
+	"dependencies": {
+		"quill": "^2.0.2"
 	}
 }

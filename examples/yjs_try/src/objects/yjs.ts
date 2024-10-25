@@ -7,29 +7,42 @@ import {
 	type Vertex,
 } from "@topology-foundation/object";
 
-export class Chat implements CRO {
-	operations: string[] = ["addMessage"];
+
+import * as Y from 'yjs';
+import  Delta  from 'quill-delta';
+import Quill from "quill";
+
+export class TextEditor implements CRO {
+	operations: string[] = ["delete", "insert", "retain", "rollback"];
 	semanticsType: SemanticsType = SemanticsType.pair;
 	// store messages as strings in the format (timestamp, message, nodeId)
-	messages: Set<string>;
+	Doc: Y.Doc;
+	ytext: Y.Text;
+	retain: number;
+
 	constructor() {
-		this.messages = new Set<string>();
+		this.Doc = new Y.Doc();
+		this.ytext = this.Doc.getText('text-editor');
+		this.retain = 0;
 	}
 
-	addMessage(timestamp: string, message: string, nodeId: string): void {
-		this._addMessage(timestamp, message, nodeId);
+	addMessage(delta: Delta, nodeId: string): void {
+		this._addMessage(delta, nodeId);
 	}
 
 	private _addMessage(
-		timestamp: string,
-		message: string,
+		delta: Delta,
 		nodeId: string,
 	): void {
-		this.messages.add(`(${timestamp}, ${message}, ${nodeId})`);
+		this.ytext.insert()
 	}
 
-	getMessages(): Set<string> {
-		return this.messages;
+	getStringText(): String{ //T ´
+		return this.ytext.toString();
+	}
+
+	getDeltaText(): Delta{
+		return this.ytext.toDelta();
 	}
 
 	resolveConflicts(vertices: Vertex[]): ResolveConflictsType {
@@ -38,8 +51,32 @@ export class Chat implements CRO {
 
 	mergeCallback(operations: Operation[]): void {
 		for (const op of operations) {
-			const args = op.value as string[];
-			this._addMessage(args[0], args[1], args[2]);
+			// if (!op.value) continue # tratar nop
+
+			const delta = op.value;
+			this.ytext.applyDelta(delta);
+
+			switch(op.type) {
+				case "insert": {
+					const text = op.value;
+					this.ytext.insert(this.retain, text);
+					break;
+				}
+				case "delete": {
+					const numberDeletedChar = op.value;
+					this.ytext.delete(this.retain, numberDeletedChar);
+					break;
+				}
+				case "retain": {
+					// acrecentar rich text posteiormente no op value
+					const retain = op.value;
+					this.retain = retain;
+					break;
+				}
+				case "rollback": {
+					// todo
+				}
+			}
 		}
 	}
 }
