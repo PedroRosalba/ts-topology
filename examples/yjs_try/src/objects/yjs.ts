@@ -7,7 +7,6 @@ import {
 	type Vertex,
 } from "@topology-foundation/object";
 
-
 import * as Y from 'yjs';
 import  Delta  from 'quill-delta';
 import Quill from "quill";
@@ -18,12 +17,12 @@ export class TextEditor implements CRO {
 	// store messages as strings in the format (timestamp, message, nodeId)
 	Doc: Y.Doc;
 	ytext: Y.Text;
-	retain: number;
+	// retain: number;
 
 	constructor() {
 		this.Doc = new Y.Doc();
 		this.ytext = this.Doc.getText('text-editor');
-		this.retain = 0;
+		// this.retain = 0;
 	}
 
 	addMessage(delta: Delta, nodeId: string): void {
@@ -34,7 +33,7 @@ export class TextEditor implements CRO {
 		delta: Delta,
 		nodeId: string,
 	): void {
-		this.ytext.insert()
+		// this.ytext.insert()
 	}
 
 	getStringText(): String{ //T ´
@@ -52,31 +51,30 @@ export class TextEditor implements CRO {
 	mergeCallback(operations: Operation[]): void {
 		for (const op of operations) {
 			// if (!op.value) continue # tratar nop
-
 			const delta = op.value;
 			this.ytext.applyDelta(delta);
 
-			switch(op.type) {
-				case "insert": {
-					const text = op.value;
-					this.ytext.insert(this.retain, text);
-					break;
-				}
-				case "delete": {
-					const numberDeletedChar = op.value;
-					this.ytext.delete(this.retain, numberDeletedChar);
-					break;
-				}
-				case "retain": {
-					// acrecentar rich text posteiormente no op value
-					const retain = op.value;
-					this.retain = retain;
-					break;
-				}
-				case "rollback": {
-					// todo
-				}
-			}
+			// switch(op.type) {
+			// 	case "insert": {
+			// 		const text = op.value;
+			// 		this.ytext.insert(this.retain, text);
+			// 		break;
+			// 	}
+			// 	case "delete": {
+			// 		const numberDeletedChar = op.value;
+			// 		this.ytext.delete(this.retain, numberDeletedChar);
+			// 		break;
+			// 	}
+			// 	case "retain": {
+			// 		// acrecentar rich text posteiormente no op value
+			// 		const retain = op.value;
+			// 		this.retain = retain;
+			// 		break;
+			// 	}
+			// 	case "rollback": {
+			// 		// todo
+			// 	}
+			// }
 		}
 	}
 }

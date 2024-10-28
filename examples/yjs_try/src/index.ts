@@ -2,9 +2,9 @@ import { TopologyNode } from "@topology-foundation/node";
 import type { TopologyObject } from "@topology-foundation/object";
 import { TextEditor } from "./objects/yjs";
 import * as Y from 'yjs';
-import { QuillBinding } from 'y-quill';
+// import { QuillBinding } from 'y-quill';
 import Quill from 'quill';
-import QuillCursors from 'quill-cursors';
+// import QuillCursors from 'quill-cursors';
 
 const node = new TopologyNode();
 // CRO = Conflict-free Replicated Object
@@ -21,22 +21,22 @@ async function createConnectHandlers() {
 		// on create/connect
 		if (topologyObject)
 			objectPeers = node.networkNode.getGroupPeers(topologyObject.id);
-		render();
+		// render();
 	});
 
 	node.objectStore.subscribe(topologyObject.id, (_, _obj) => {
-		render();
+		// render();
 	});
 }
 
 async function main(){
     await node.start();
-    render();
+    // render();
 
 	node.addCustomGroupMessageHandler("", (e) => {
 		peers = node.networkNode.getAllPeers();
 		discoveryPeers = node.networkNode.getGroupPeers("topology::discovery");
-		render();
+		// render();
 	});
 
 	const button_create = <HTMLButtonElement>(
@@ -63,13 +63,14 @@ async function main(){
             placeholder: 'Start collaborating...',
             theme: 'snow' // or 'bubble'
           });
-        const binding = new QuillBinding(
-            texteditorCRO.ytext,
-            editor
-        );
+
+        // const binding = new QuillBinding(
+        //     texteditorCRO.ytext,
+        //     editor
+        // );
 
 		createConnectHandlers();
-		render();
+		// render();
 	});
 
 	const button_connect = <HTMLButtonElement>document.getElementById("joinRoom");
@@ -114,7 +115,7 @@ async function main(){
         );
 
 		createConnectHandlers();
-		render();
+		// render();
 	});
 
     //no caso aqui nao tem send pq eh editor de texto
