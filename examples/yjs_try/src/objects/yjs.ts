@@ -33,7 +33,7 @@ export class TextEditor implements CRO {
 		delta: Delta,
 		nodeId: string,
 	): void {
-		// this.ytext.insert()
+		// this.ytext.applyDelta
 	}
 
 	getStringText(): String{ //T ´
