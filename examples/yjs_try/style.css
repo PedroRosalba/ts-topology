@@ -1,20 +1,44 @@
+/* src/styles.css */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif; /* Definindo uma fonte padrão */
+}
+
+.editor-container {
+  width: 100%; /* Largura total do contêiner */
+  height: 100vh; /* Altura total da tela */
+  display: flex;
+  justify-content: center; /* Centralizando horizontalmente */
+  align-items: center; /* Centralizando verticalmente */
+  padding: 20px; /* Adicionando espaçamento */
+  box-sizing: border-box; /* Para incluir padding na largura e altura */
+}
+
 .controls {
-    display: flex;
-    border: 1px solid #ccc;
-    border-top: 0;
-    padding: 10px;
-  }
-  
-  .controls-right {
-    margin-left: auto;
-  }
-  
-  .state {
-    margin: 10px 0;
-    font-family: monospace;
-  }
-  
-  .state-title {
-    color: #999;
-    text-transform: uppercase;
-  }
+  margin: 10px 0;
+}
+
+.state {
+  margin-top: 20px;
+}
+
+.state-title {
+  font-weight: bold;
+}
+
+/* Estilos específicos para o editor Quill */
+.ql-container {
+  height: 300px; /* Definindo uma altura fixa para o editor Quill */
+}
+
+.ql-toolbar {
+  border: 1px solid #ccc; /* Borda da barra de ferramentas */
+  border-bottom: none; /* Removendo a borda inferior */
+}
+
+.ql-container.ql-snow {
+  border: 1px solid #ccc; /* Borda do editor */
+  border-top: none; /* Removendo a borda superior */
+}

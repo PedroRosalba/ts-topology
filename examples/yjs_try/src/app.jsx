@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
-import Editor from './Editor';
+import Quill from 'quill'; // Importando Quill
+import Editor from './editor.jsx';
 
 const Delta = Quill.import('delta');
 
@@ -7,8 +8,6 @@ const App = () => {
   const [range, setRange] = useState();
   const [lastChange, setLastChange] = useState();
   const [readOnly, setReadOnly] = useState(false);
-
-  // Use a ref to access the quill instance directly
   const quillRef = useRef();
 
   return (
@@ -27,7 +26,7 @@ const App = () => {
         onSelectionChange={setRange}
         onTextChange={setLastChange}
       />
-      <div class="controls">
+      <div className="controls">
         <label>
           Read Only:{' '}
           <input

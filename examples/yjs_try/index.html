@@ -1,50 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Topology - Chat</title>
-  </head>
-  <body>
-    <div>
-      <h1>Topology Protocol - Chat</h1>
-      <p>Current peer ID <span id="peerId"></span></p>
-      <p>Connected to <span id="chatId"></span></p>
-      <p>peers: <span id="peers"></span></p>
-      <p>discovery_peers: <span id="discoveryPeers"></span></p>
-      <p>object_peers: <span id="objectPeers"></span></p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React Quill Editor</title>
 
-      <input id="roomInput" type="text" placeholder="Room ID" />
-      <button id="joinRoom">Connect</button>
-      <button id="createRoom">Create Room</button>
-    </div>
+  <!-- Estilo para o editor -->
+  <style>
+    /* Certifique-se de que o corpo ocupa toda a altura */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
 
-    <div
-      id="chat"
-      style="
-        overflow-y: scroll;
-        min-height: 200px;
-        max-height: 60vh;
-        width: 100%;
-      "
-    >
-      <!-- Messages will appear here -->
-    </div>
+    /* Define a área do editor */
+    #root {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f9f9f9;
+    }
 
-    <div style="margin-bottom: 10px">
-      <input id="messageInput" type="text" placeholder="Message" />
-      <button id="sendMessage">Send</button>
-    </div>
+    /* Define o contêiner do editor Quill */
+    .editor {
+      width: 100%;
+      max-width: 800px;
+      height: 400px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 10px;
+      background-color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div> <!-- Onde o componente React será montado -->
 
-    <script>
-      var input = document.getElementById("messageInput");
-      input.addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-          document.getElementById("sendMessage").click();
-        }
-      });
-    </script>
+  <!-- Importação de React e ReactDOM -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/quill@1.3.7/dist/quill.js"></script>
 
-    <script type="module" src="/src/index.ts"></script>
-  </body>
+  <!-- Script com o código do React e o componente App -->
+  <script type="module" src="./src/index.jsx"></script>
+</body>
 </html>
