@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import Quill from 'quill'; // Importando Quill
+import Quill from 'quill';
 import Editor from './editor.jsx';
 
 const Delta = Quill.import('delta');
@@ -26,12 +26,13 @@ const App = () => {
         onSelectionChange={setRange}
         onTextChange={setLastChange}
       />
+      
       <div className="controls">
         <label>
-          Read Only:{' '}
+          Read Only:
           <input
             type="checkbox"
-            value={readOnly}
+            checked={readOnly}
             onChange={(e) => setReadOnly(e.target.checked)}
           />
         </label>
@@ -45,10 +46,12 @@ const App = () => {
           Get Content Length
         </button>
       </div>
+
       <div className="state">
         <div className="state-title">Current Range:</div>
         {range ? JSON.stringify(range) : 'Empty'}
       </div>
+
       <div className="state">
         <div className="state-title">Last Change:</div>
         {lastChange ? JSON.stringify(lastChange.ops) : 'Empty'}

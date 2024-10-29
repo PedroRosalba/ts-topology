@@ -33,6 +33,8 @@ const Editor = forwardRef(
       }
 
       quill.on(Quill.events.TEXT_CHANGE, (...args) => {
+        console.log(...args);
+        
         onTextChangeRef.current?.(...args);
       });
 
